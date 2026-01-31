@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # Datalake PostgreSQL Database
+  # ============================================
+  datalake-postgres:
+    image: postgres:15-alpine
+    container_name: datalake-postgres
+    environment:
+      - POSTGRES_DB=datalake
+      - POSTGRES_USER=datalake_user
+      - POSTGRES_PASSWORD=datalake_pass
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+      - ./init-datalake.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+    networks:
+      - datalake-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U datalake_user -d datalake"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # Service BE - Datalake API (Node.js)
+  # ============================================
+  service-be:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: service-be
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_HOST=datalake-postgres
+      - DB_PORT=5432
+      - DB_NAME=datalake
+      - DB_USER=datalake_user
+      - DB_PASSWORD=datalake_pass
+    ports:
+      - "3000:3000"
+    depends_on:
+      datalake-postgres:
+        condition: service_healthy
+    networks:
+      - datalake-network
+      - mirth-connect_mirth-network  # Connect to Mirth network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  datalake-network:
+    driver: bridge
+  # External network to connect with Mirth
+  mirth-connect_mirth-network:
+    external: true
+
+volumes:
+  datalake-data:

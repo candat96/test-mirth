@@ -1,0 +1,16 @@
+# Secrets
+secrets/
+!secrets/.gitkeep
+
+# Environment files
+.env
+
+# Data directories
+data/appdata/
+data/postgres/
+data/custom-extensions/*.zip
+data/custom-lib/*.jar
+proposal-website/
+
+# Logs
+*.log

@@ -1,0 +1,32 @@
+{
+  "resourceType": "Patient",
+  "id": "PAT001",
+  "identifier": [
+    {
+      "system": "urn:oid:hospital-a",
+      "value": "PAT001"
+    }
+  ],
+  "name": [
+    {
+      "family": "Nguyen",
+      "given": ["Van", "A"]
+    }
+  ],
+  "gender": "male",
+  "birthDate": "1985-03-15",
+  "address": [
+    {
+      "line": ["123 Le Loi"],
+      "city": "Ho Chi Minh City",
+      "postalCode": "700000",
+      "country": "VN"
+    }
+  ],
+  "telecom": [
+    {
+      "system": "phone",
+      "value": "0901234567"
+    }
+  ]
+}
