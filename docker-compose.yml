@@ -46,7 +46,7 @@ services:
       - mirth-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "-k", "https://localhost:8443/api/server/status"]
+      test: ["CMD", "curl", "-f", "-k", "-H", "X-Requested-With: XMLHttpRequest", "https://localhost:8443/api/server/status"]
       interval: 30s
       timeout: 10s
       retries: 5

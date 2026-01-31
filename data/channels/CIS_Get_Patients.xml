@@ -1,9 +1,9 @@
 <channel version="4.5.2">
-  <id>9db7f747-f054-4352-8b47-9100a2dd1cb0</id>
+  <id>b2c3d4e5-f6a7-8901-bcde-f23456789012</id>
   <nextMetaDataId>2</nextMetaDataId>
-  <name>CIS_Patient_to_BE</name>
-  <description>Receive patient from CIS and forward to Backend Datalake</description>
-  <revision>5</revision>
+  <name>CIS_Get_Patients</name>
+  <description>Get patients from Backend Datalake</description>
+  <revision>1</revision>
   <sourceConnector version="4.5.2">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -15,7 +15,7 @@
       </pluginProperties>
       <listenerConnectorProperties version="4.5.2">
         <host>0.0.0.0</host>
-        <port>8081</port>
+        <port>8082</port>
       </listenerConnectorProperties>
       <sourceConnectorProperties version="4.5.2">
         <responseVariable>d1</responseVariable>
@@ -33,7 +33,7 @@
       </sourceConnectorProperties>
       <xmlBody>false</xmlBody>
       <parseMultipart>true</parseMultipart>
-      <includeMetadata>false</includeMetadata>
+      <includeMetadata>true</includeMetadata>
       <binaryMimeTypes>application/.*(?&lt;!json|xml)$|image/.*|video/.*|audio/.*</binaryMimeTypes>
       <binaryMimeTypesRegex>true</binaryMimeTypesRegex>
       <responseContentType>application/json</responseContentType>
@@ -43,7 +43,7 @@
       <responseHeadersVariable></responseHeadersVariable>
       <useResponseHeadersVariable>false</useResponseHeadersVariable>
       <charset>UTF-8</charset>
-      <contextPath>/api/cis/patient</contextPath>
+      <contextPath>/api/cis/patients/</contextPath>
       <timeout>30000</timeout>
       <staticResources/>
     </properties>
@@ -75,7 +75,7 @@
   <destinationConnectors>
     <connector version="4.5.2">
       <metaDataId>1</metaDataId>
-      <name>Forward_to_BE</name>
+      <name>Get_from_BE</name>
       <properties class="com.mirth.connect.connectors.http.HttpDispatcherProperties" version="4.5.2">
         <pluginProperties/>
         <destinationConnectorProperties version="4.5.2">
@@ -98,11 +98,11 @@
           <queueBufferSize>1000</queueBufferSize>
           <reattachAttachments>true</reattachAttachments>
         </destinationConnectorProperties>
-        <host>http://207.180.206.229:3000/api/v1/patients</host>
+        <host>http://207.180.206.229:3000/api/v1/patients?${sourceMap.get('query')}</host>
         <useProxyServer>false</useProxyServer>
         <proxyAddress></proxyAddress>
         <proxyPort></proxyPort>
-        <method>post</method>
+        <method>get</method>
         <headers class="linked-hash-map">
           <entry>
             <string>Content-Type</string>
@@ -125,7 +125,7 @@
         <usePreemptiveAuthentication>false</usePreemptiveAuthentication>
         <username></username>
         <password></password>
-        <content>${message.encodedData}</content>
+        <content></content>
         <contentType>application/json</contentType>
         <dataTypeBinary>false</dataTypeBinary>
         <charset>UTF-8</charset>
@@ -174,17 +174,10 @@
       <waitForPrevious>true</waitForPrevious>
     </connector>
   </destinationConnectors>
-  <preprocessingScript>// Modify the message variable below to pre process data
-return message;</preprocessingScript>
-  <postprocessingScript>// This script executes once after a message has been processed
-// Responses returned from here will be stored as "Postprocessor" in the response map
-return;</postprocessingScript>
-  <deployScript>// This script executes once when the channel is deployed
-// You only have access to the globalMap and globalChannelMap here to persist data
-return;</deployScript>
-  <undeployScript>// This script executes once when the channel is undeployed
-// You only have access to the globalMap and globalChannelMap here to persist data
-return;</undeployScript>
+  <preprocessingScript>return message;</preprocessingScript>
+  <postprocessingScript>return;</postprocessingScript>
+  <deployScript>return;</deployScript>
+  <undeployScript>return;</undeployScript>
   <properties version="4.5.2">
     <clearGlobalChannelMap>true</clearGlobalChannelMap>
     <messageStorageMode>DEVELOPMENT</messageStorageMode>
@@ -196,18 +189,7 @@ return;</undeployScript>
     <removeAttachmentsOnCompletion>false</removeAttachmentsOnCompletion>
     <initialState>STARTED</initialState>
     <storeAttachments>true</storeAttachments>
-    <metaDataColumns>
-      <metaDataColumn>
-        <name>SOURCE</name>
-        <type>STRING</type>
-        <mappingName>mirth_source</mappingName>
-      </metaDataColumn>
-      <metaDataColumn>
-        <name>TYPE</name>
-        <type>STRING</type>
-        <mappingName>mirth_type</mappingName>
-      </metaDataColumn>
-    </metaDataColumns>
+    <metaDataColumns/>
     <attachmentProperties version="4.5.2">
       <type>None</type>
       <properties/>
@@ -219,18 +201,4 @@ return;</undeployScript>
       </entry>
     </resourceIds>
   </properties>
-  <exportData>
-    <metadata>
-      <enabled>true</enabled>
-      <lastModified>
-        <time>1769843667014</time>
-        <timezone>Asia/Ho_Chi_Minh</timezone>
-      </lastModified>
-      <pruningSettings>
-        <archiveEnabled>true</archiveEnabled>
-        <pruneErroredMessages>false</pruneErroredMessages>
-      </pruningSettings>
-      <userId>1</userId>
-    </metadata>
-  </exportData>
 </channel>

@@ -1,9 +1,9 @@
 <channel version="4.5.2">
-  <id>9db7f747-f054-4352-8b47-9100a2dd1cb0</id>
+  <id>a1b2c3d4-e5f6-7890-abcd-ef1234567890</id>
   <nextMetaDataId>2</nextMetaDataId>
-  <name>CIS_Patient_to_BE</name>
+  <name>CIS_Patient_to_BE_v2</name>
   <description>Receive patient from CIS and forward to Backend Datalake</description>
-  <revision>5</revision>
+  <revision>1</revision>
   <sourceConnector version="4.5.2">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -43,7 +43,7 @@
       <responseHeadersVariable></responseHeadersVariable>
       <useResponseHeadersVariable>false</useResponseHeadersVariable>
       <charset>UTF-8</charset>
-      <contextPath>/api/cis/patient</contextPath>
+      <contextPath>/api/cis/patient/</contextPath>
       <timeout>30000</timeout>
       <staticResources/>
     </properties>
@@ -174,17 +174,10 @@
       <waitForPrevious>true</waitForPrevious>
     </connector>
   </destinationConnectors>
-  <preprocessingScript>// Modify the message variable below to pre process data
-return message;</preprocessingScript>
-  <postprocessingScript>// This script executes once after a message has been processed
-// Responses returned from here will be stored as "Postprocessor" in the response map
-return;</postprocessingScript>
-  <deployScript>// This script executes once when the channel is deployed
-// You only have access to the globalMap and globalChannelMap here to persist data
-return;</deployScript>
-  <undeployScript>// This script executes once when the channel is undeployed
-// You only have access to the globalMap and globalChannelMap here to persist data
-return;</undeployScript>
+  <preprocessingScript>return message;</preprocessingScript>
+  <postprocessingScript>return;</postprocessingScript>
+  <deployScript>return;</deployScript>
+  <undeployScript>return;</undeployScript>
   <properties version="4.5.2">
     <clearGlobalChannelMap>true</clearGlobalChannelMap>
     <messageStorageMode>DEVELOPMENT</messageStorageMode>
@@ -196,18 +189,7 @@ return;</undeployScript>
     <removeAttachmentsOnCompletion>false</removeAttachmentsOnCompletion>
     <initialState>STARTED</initialState>
     <storeAttachments>true</storeAttachments>
-    <metaDataColumns>
-      <metaDataColumn>
-        <name>SOURCE</name>
-        <type>STRING</type>
-        <mappingName>mirth_source</mappingName>
-      </metaDataColumn>
-      <metaDataColumn>
-        <name>TYPE</name>
-        <type>STRING</type>
-        <mappingName>mirth_type</mappingName>
-      </metaDataColumn>
-    </metaDataColumns>
+    <metaDataColumns/>
     <attachmentProperties version="4.5.2">
       <type>None</type>
       <properties/>
@@ -219,18 +201,4 @@ return;</undeployScript>
       </entry>
     </resourceIds>
   </properties>
-  <exportData>
-    <metadata>
-      <enabled>true</enabled>
-      <lastModified>
-        <time>1769843667014</time>
-        <timezone>Asia/Ho_Chi_Minh</timezone>
-      </lastModified>
-      <pruningSettings>
-        <archiveEnabled>true</archiveEnabled>
-        <pruneErroredMessages>false</pruneErroredMessages>
-      </pruningSettings>
-      <userId>1</userId>
-    </metadata>
-  </exportData>
 </channel>
