@@ -25,9 +25,9 @@ app.get('/health', (req, res) => {
 // ============================================
 app.post('/api/v1/patients', async (req, res) => {
   const { tenantId, patientId, fullName, birthDate, gender, phone, address } = req.body;
-  
+
   console.log(`[BE] Received patient: ${patientId} from tenant: ${tenantId}`);
-  
+
   // Validation
   if (!tenantId || !patientId || !fullName) {
     return res.status(400).json({
@@ -51,7 +51,7 @@ app.post('/api/v1/patients', async (req, res) => {
         updated_at = CURRENT_TIMESTAMP
       RETURNING id, tenant_id, patient_id, created_at, updated_at;
     `;
-    
+
     const values = [
       tenantId,
       patientId,
@@ -64,9 +64,9 @@ app.post('/api/v1/patients', async (req, res) => {
     ];
 
     const result = await pool.query(query, values);
-    
+
     console.log(`[BE] Patient saved: ${patientId}`);
-    
+
     res.status(201).json({
       success: true,
       message: 'Patient saved to Datalake',
@@ -87,7 +87,7 @@ app.post('/api/v1/patients', async (req, res) => {
 // ============================================
 app.get('/api/v1/patients', async (req, res) => {
   const { tenantId, patientId, limit = 100 } = req.query;
-  
+
   console.log(`[BE] Query patients - tenantId: ${tenantId || 'all'}, patientId: ${patientId || 'all'}`);
 
   try {
@@ -136,7 +136,7 @@ app.get('/api/v1/patients', async (req, res) => {
 // ============================================
 app.post('/api/v1/encounters', async (req, res) => {
   const { tenantId, encounterId, patientId, encounterType, status, startTime, diagnosis } = req.body;
-  
+
   console.log(`[BE] Received encounter: ${encounterId} for patient: ${patientId}`);
 
   if (!tenantId || !encounterId || !patientId) {
@@ -157,7 +157,7 @@ app.post('/api/v1/encounters', async (req, res) => {
         raw_data = EXCLUDED.raw_data
       RETURNING id, encounter_id, patient_id;
     `;
-    
+
     const values = [
       tenantId,
       encounterId,
@@ -170,7 +170,7 @@ app.post('/api/v1/encounters', async (req, res) => {
     ];
 
     const result = await pool.query(query, values);
-    
+
     res.status(201).json({
       success: true,
       message: 'Encounter saved to Datalake',
@@ -188,8 +188,8 @@ app.post('/api/v1/encounters', async (req, res) => {
 // ============================================
 app.post('/api/v1/lab-results', async (req, res) => {
   const { tenantId, resultId, patientId, encounterId, testCode, testName, resultValue, unit, referenceRange, status } = req.body;
-  
-  console.log(`[BE] Received lab result: ${resultId} for patient: ${patientId}`);
+
+  console.log(`[BE] Received lab result: ${JSON.stringify(req.body)}`);
 
   if (!tenantId || !resultId || !patientId) {
     return res.status(400).json({
@@ -209,7 +209,7 @@ app.post('/api/v1/lab-results', async (req, res) => {
         raw_data = EXCLUDED.raw_data
       RETURNING id, result_id, patient_id;
     `;
-    
+
     const values = [
       tenantId,
       resultId,
@@ -225,7 +225,7 @@ app.post('/api/v1/lab-results', async (req, res) => {
     ];
 
     const result = await pool.query(query, values);
-    
+
     res.status(201).json({
       success: true,
       message: 'Lab result saved to Datalake',
@@ -243,7 +243,7 @@ app.post('/api/v1/lab-results', async (req, res) => {
 // ============================================
 app.get('/api/v1/patients/:patientId/history', async (req, res) => {
   const { patientId } = req.params;
-  
+
   console.log(`[BE] Query patient history: ${patientId}`);
 
   try {
