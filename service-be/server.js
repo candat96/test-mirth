@@ -24,6 +24,7 @@ app.get('/health', (req, res) => {
 // API: Receive Patient from Mirth ESB
 // ============================================
 app.post('/api/v1/patients', async (req, res) => {
+  console.log(`[BE] Received patient: ${JSON.stringify(req.body)}`);
   const { tenantId, patientId, fullName, birthDate, gender, phone, address } = req.body;
 
   console.log(`[BE] Received patient: ${patientId} from tenant: ${tenantId}`);
@@ -86,6 +87,7 @@ app.post('/api/v1/patients', async (req, res) => {
 // API: Get Patients for App
 // ============================================
 app.get('/api/v1/patients', async (req, res) => {
+  console.log(`[BE] Query patients - ${JSON.stringify(req.query)}`);
   const { tenantId, patientId, limit = 100 } = req.query;
 
   console.log(`[BE] Query patients - tenantId: ${tenantId || 'all'}, patientId: ${patientId || 'all'}`);
