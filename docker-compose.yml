@@ -19,11 +19,26 @@ services:
       - ./data/custom-extensions:/opt/connect/custom-extensions
       - ./data/custom-lib:/opt/connect/custom-lib
     ports:
+      # Mirth Admin Dashboard
       - "8443:8443"
+      # Mirth Web Server (internal API)
       - "8080:8080"
+      # HTTP Listener Channels
+      - "8081:8081"
+      - "8082:8082"
+      - "8083:8083"
+      - "8084:8084"
+      - "8085:8085"
+      # HL7 MLLP Listeners
       - "6661:6661"
       - "6662:6662"
       - "6663:6663"
+      - "6664:6664"
+      - "6665:6665"
+      # DICOM
+      - "11112:11112"
+      # FHIR
+      - "8090:8090"
     depends_on:
       postgres:
         condition: service_healthy
